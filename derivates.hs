@@ -33,3 +33,27 @@ derivate (Sum f g)         = Sum (derivate f) (derivate g)
 derivate (Difference f g)  = Difference (derivate f) (derivate g)
 derivate (Product f g)     = Sum (Product (derivate f) g) (Product f (derivate g))
 derivate (Quotient f g)    = Quotient (Difference (Product (derivate f) g) (Product f (derivate g))) (Power g 2)
+
+eval :: Function -> Double -> Double
+eval X x                 = x
+eval (Const c) _         = c
+eval (Power f a) x       = (eval f x) ** a
+eval (E f) x             = exp (eval f x)
+eval (Exponential a f) x = a ** (eval f x)
+eval (Log a f) x         = logBase a (eval f x)
+eval (Ln f) x            = log (eval f x)
+eval (Sin f) x           = sin (eval f x)
+eval (Cos f) x           = cos (eval f x)
+eval (Tg f) x            = tan (eval f x)
+eval (Ctg f) x           = 1.0 / tan (eval f x)
+eval (Sum f g) x         = (eval f x) + (eval g x)
+eval (Difference f g) x  = (eval f x) - (eval g x)
+eval (Product f g) x     = (eval f x) * (eval g x)
+eval (Quotient f g) x    = (eval f x) / (eval g x)
+
+derivateInPoint :: Function -> Double -> Double
+derivateInPoint = eval . derivate
+
+-- example
+-- fun = Product (Sum (Ln (Tg (Sin (Power X 5)))) (Power (Difference (Const 4) X) 3)) (Const 4)
+
